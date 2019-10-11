@@ -35,16 +35,18 @@ class DBHelper {
     return _db;
   }
 
-  initDb() async {
-    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, DB_NAME);
-    var db = await openDatabase(path, version: 1, onCreate: _onCreate);
-    return db;
+  Future<Database> initDb() async {
+    io.Directory directory = await getApplicationDocumentsDirectory();
+		String path = directory.path + 'recette.db';
+
+		// Open/create the database at a given path
+		var recetteDatabase = await openDatabase(path, version: 1, onCreate: _onCreate);
+		return recetteDatabase;
   }
 
   _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $TABLE ($ID INTEGER AUTOINCREMENT PRIMARY KEY, $RECETTEJ INTEGER, $DEPENSEJ INTEGER, $DESCRIPTION TEXT, $TOT INTEGER, $DATE TEXT)");
+        "CREATE TABLE $TABLE ($ID INTEGER PRIMARY KEY AUTOINCREMENT, $RECETTEJ INTEGER, $DEPENSEJ INTEGER, $DESCRIPTION TEXT, $TOT INTEGER, $DATE TEXT)");
   }
 
   Future<int> insertRecette(Recette recette) async {
