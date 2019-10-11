@@ -6,7 +6,7 @@ class Recette {
   String _description;
   String _date;
 
-  Recette(this._id,this._recetteJ,this._depenseJ,this._tot,this._date,[this._description]);
+  Recette(this._recetteJ,this._depenseJ,this._tot,this._date,[this._description]);
   int get id => _id;
   int get recetteJ => _recetteJ;
   int get depenseJ => _depenseJ;
