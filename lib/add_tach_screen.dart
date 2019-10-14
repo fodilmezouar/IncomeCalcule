@@ -13,15 +13,16 @@ class AddTachScreen extends StatelessWidget {
         content: Text(message),
       );
       showDialog(context: context, builder: (_) => alertDialog);
+      Navigator.pop(context);
     }
-    String newTaskTitle;
     DBHelper databaseHelper = DBHelper();
     TextEditingController dateController = TextEditingController();
     TextEditingController fraisController = TextEditingController();
     TextEditingController recetteController = TextEditingController();
+    TextEditingController descController = TextEditingController();
     final format = DateFormat("yyyy-MM-dd");
     return Container(
-      height: MediaQuery.of(context).size.height / 2,
+      height: MediaQuery.of(context).size.height / 2 + 100,
       color: Color(0xff2a1a5e),
       child: Container(
         padding: EdgeInsets.all(20.0),
@@ -87,6 +88,18 @@ class AddTachScreen extends StatelessWidget {
               onChanged: (newText) {},
             ),
             SizedBox(
+              height: 10,
+            ),
+            TextField(
+              controller: descController,
+              decoration: new InputDecoration(
+                labelText: "Description:",
+                labelStyle: TextStyle(fontSize: 19.0, color: Color(0xff2a1a5e)),
+              ),
+              autofocus: true,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
               height: 40,
             ),
             Material(
@@ -104,26 +117,26 @@ class AddTachScreen extends StatelessWidget {
                   if (fraisController.text != "" &&
                       recetteController.text != "" &&
                       dateController.text != "") {
-                    setState() {}
                     int frais = int.parse(fraisController.text);
                     int recette = int.parse(recetteController.text);
                     int tot = recette - frais;
                     print(tot);
                     Recette r =
-                        new Recette(recette, frais, tot, dateController.text);
+                        new Recette(recette, frais, tot, dateController.text,descController.text);
                     int result = 0;
                     result = await databaseHelper.insertRecette(r);
                     if (result != 0) {
                       // Success
+                      fraisController.clear();
+                      recetteController.clear();
+                      dateController.clear();
                       _showAlertDialog('Status', 'Note Saved Successfully');
                       Navigator.pop(context);
                     } else {
                       // Failure
                       _showAlertDialog('Status', 'Problem Saving Note');
                     }
-                    print(result);
                   }
-                  Navigator.pop(context);
                 },
               ),
             )

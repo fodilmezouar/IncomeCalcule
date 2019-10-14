@@ -1,6 +1,6 @@
 import 'package:coffee_friends/add_tach_screen.dart';
+import 'package:coffee_friends/filter_income.dart';
 import 'package:flutter/material.dart';
-
 import 'listeTaches.dart';
 
 void main() => runApp(new MyApp());
@@ -26,6 +26,17 @@ class _MyAppState extends State<MyApp> {
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    void navigateToListe() async {
+      bool result =
+          await Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ListeTaches();
+      }));
+
+      if (result == true) {
+        print("object");
+      }
+    }
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -53,11 +64,7 @@ class HomePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50.0),
                   color: Color(0xff2a1a5e),
                   child: MaterialButton(
-                      onPressed: () => Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) {
-                              return ListeTaches();
-                            }),
-                          ),
+                      onPressed: navigateToListe,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -89,9 +96,10 @@ class HomePage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(50.0),
                   color: Color(0xff2a1a5e),
                   child: MaterialButton(
-                      onPressed: () => showBottomSheet(
-                          context: context,
-                          builder: (context) => new AddTachScreen()),
+                      onPressed: () => Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return FilterIncome();
+                          })),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,

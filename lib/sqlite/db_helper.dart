@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io' as io;
-import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'recette.dart';
@@ -75,9 +74,21 @@ class DBHelper {
     int result = Sqflite.firstIntValue(x);
     return result;
   }
-
+Future<int> getTotal(int month,String year) async {
+    Database db = await this.db;
+    List<Map<String, dynamic>> x =
+        await db.rawQuery("SELECT SUM($TOT),strftime('%m',$DATE) as month,strftime('%Y',$DATE) as year from $TABLE WHERE  month ='$month' and year = '$year'" );
+    int result = Sqflite.firstIntValue(x);
+    return result;
+  }
+  Future<int> getTotalYear(String year) async {
+    Database db = await this.db;
+    List<Map<String, dynamic>> x =
+        await db.rawQuery("SELECT SUM($TOT),strftime('%m',$DATE) as month,strftime('%Y',$DATE) as year from $TABLE WHERE   year = '$year'" );
+    int result = Sqflite.firstIntValue(x);
+    return result;
+  }
   Future<List<Recette>> getRecetteList() async {
-
 		var recetteMapList = await getrecetteMapList(); // Get 'Map List' from database
 		int count = recetteMapList.length;         // Count the number of map entries in db table
 
@@ -92,8 +103,7 @@ class DBHelper {
   Future<List<Map<String, dynamic>>> getrecetteMapList() async {
 		Database db = await this.db;
 
-//		var result = await db.rawQuery('SELECT * FROM $noteTable order by $colPriority ASC');
-		var result = await db.query(TABLE, orderBy: '$DATE ASC');
+		var result = await db.rawQuery('SELECT * FROM $TABLE order by $DATE ASC');
 		return result;
 	}
   Future close() async {
